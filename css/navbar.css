@@ -7,7 +7,7 @@
     position: sticky;
     top: 0;
     z-index: 999;
-    background: #131313;
+    background: #d9b9b9;
 }
 
 .navbar__container {
@@ -50,7 +50,7 @@
 }
 
 .navbar__links {
-    color: #fff;
+    color: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@
     }
 
     .navbar__menu.active {
-        background: #131313;
+        background: #d9b9b9;
         top: 100%;
         opacity: 1;
         transition: all 0.5s ease;
@@ -107,7 +107,7 @@
         height: 3px;
         margin: 5px auto;
         transition: all 0.3s ease-in-out;
-        background: #fff;
+        background: black;
     }
 
     .navbar__item {

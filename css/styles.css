@@ -3,11 +3,15 @@
     margin: 0;
     padding: 0;
     font-family: 'Kumbh Sans', sans-serif;
-    color: white;
+    color: black;
+    transition-property: all;
+    transition-duration: 0.6s;
+    transition-timing-function: ease;
 }
 
+
 body {
-    background-color: #131313;
+    background-color: #e5cfcf;
 }
 
 @keyframes smoothscroll1 {
@@ -73,6 +77,47 @@ html:focus-within {
     font-size: 1.3rem;
 }
 
+.btn {
+    font-size: 1rem;
+    padding: 14px 32px;
+    background: transparent;
+    border: solid 1px black;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.35s;
+}
+
+.btn a {
+    position: relative;
+    z-index: 2;
+    text-decoration: none;
+    background: transparent;
+}
+
+.btn:after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #ea9c9c;
+    transition: all 0.35s;
+}
+
+.btn:hover {
+    transform: scale(1.075);
+    transition: 0.2s ease-in;
+    cursor: pointer;
+}
+
+.btn:hover:after {
+    color: white;
+    width: 100%;
+}
+
 /* Mobile */
 @media screen and (max-width: 768px) {
     .custom-h1, .content h1, .banner h1 {
@@ -100,7 +145,6 @@ html:focus-within {
 
 .center {
     text-align: center;
-    alignment: center;
     align-content: center;
     align-items: center;
 }
@@ -111,7 +155,7 @@ html:focus-within {
 
 .banner {
     height: 60vh;
-    color: #fff;
+    color: black;
     position: relative;
     display: flex;
     flex-direction: column;
