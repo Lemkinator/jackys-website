@@ -172,7 +172,7 @@ html:focus-within {
 
 .about-banner {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgb(196, 173, 173) 100%),
-    linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgb(196, 173, 173, 0.9) 100%),
+    linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgb(196, 173, 173, 0.4) 100%),
     url('https://www.jackys-harfe.de/images/strings2.jpg');
 }
 
