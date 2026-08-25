@@ -20,6 +20,14 @@ const tracks = (await getCollection('tracks')).sort((a, b) => a.data.order - b.d
     transitionName="hub-audio"
   />
 
+  <div class="content">
+    <p>
+      Hier erhalten Sie einen Einblick in mein musikalisches Repertoire. Neben einer vielfältigen Auswahl an
+      klassischen und modernen Stücken erfülle ich gerne individuelle Musikwünsche und erarbeite auf Wunsch auch neue
+      Arrangements.
+    </p>
+  </div>
+
   <CardGrid>
     {
       tracks.map((track, i) => (
