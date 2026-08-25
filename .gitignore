@@ -19,4 +19,5 @@ npm-debug.log*
 !/.idea/inspectionProfiles/**
 !/.idea/jackys-website.iml
 !/.idea/modules.xml
+!/.idea/prettier.xml
 !/.idea/vcs.xml
