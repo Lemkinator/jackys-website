@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Banner from '@/components/Banner.astro';
+import bannerImg from '@/assets/404/banner.jpg';
+---
+
+<BaseLayout title="404 – Jackys Harfe" description="Seite nicht gefunden" noindex>
+  <Banner
+    image={bannerImg}
+    title="404"
+    subtitle="Hm, ich kann diese Seite leider nicht finden!"
+    imageAlt="KI-generiertes abstraktes Bild eines Wegweisers an einer nebligen Kreuzung, der sich in verstreute goldene Lichtpartikel auflöst"
+  />
+  <div class="error">
+    <!-- Plain img, not astro:assets Image: Sharp's animated-webp re-encode
+         nearly doubles this file's size vs. the pre-tuned source, since it
+         drops the ffmpeg-side frame deduplication. -->
+    <img src="/404/error.webp" alt="" width="480" height="280" />
+    <button class="button-pill"><a href="/">Home</a></button>
+  </div>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Giscus from '@/components/Giscus.astro';
+import Banner from '@/components/Banner.astro';
+import bannerImg from '@/assets/contact/banner.jpg';
+---
+
+<BaseLayout title="Kontakt – Jackys Harfe" description="Kontakt zu Jaqueline Lemke, Harfenistin" image={bannerImg}>
+  <Banner
+    image={bannerImg}
+    title="Kontakt"
+    subtitle="Ich freue mich darauf, von Ihnen zu hören."
+    imageAlt="Jaqueline Lemke spielt Harfe inmitten eines Orchesters vor Publikum"
+    transitionName="hub-contact"
+  />
+
+  <div class="center content">
+    <h1 class="heading-display text-gradient">Lassen Sie uns in Verbindung bleiben</h1>
+    <p>
+      Vielen Dank, dass Sie meine Website besucht haben. Wenn Sie Fragen haben, mehr über meine Musik erfahren möchten,
+      mich für eine Veranstaltung buchen oder Harfenunterricht nehmen möchten, stehe ich Ihnen gerne zur Verfügung.
+    </p>
+    <button class="button-pill"><a href="mailto:info@jackys-harfe.de">E-Mail schreiben</a></button>
+    <button class="button-pill">
+      <a href="https://www.instagram.com/jackyfleur/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    </button>
+  </div>
+
+  <Giscus />
+</BaseLayout>

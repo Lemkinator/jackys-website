@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Giscus from '@/components/Giscus.astro';
+import CardGrid from '@/components/CardGrid.astro';
+import Card from '@/components/Card.astro';
+import Banner from '@/components/Banner.astro';
+import ShaderBackdrop from '@/components/ShaderBackdrop.astro';
+import heroImage from '@/assets/home/hero.jpg';
+import portraitImage from '@/assets/home/me-harp.jpg';
+import aboutBannerImage from '@/assets/about/banner.jpg';
+import audioBannerImage from '@/assets/audio/banner.jpg';
+import contactBannerImage from '@/assets/contact/banner.jpg';
+---
+
+<BaseLayout title="Jackys Harfe" description="Jaqueline Lemke – Harfenistin" image={heroImage}>
+  <Banner
+    image={heroImage}
+    title="Jaqueline Lemke"
+    subtitle="Harfenistin"
+    imageAlt="KI-generiertes abstraktes Bild eines Harfen-Saitenfelds im warmen Licht, die Saiten lösen sich nach oben in schwebende Lichtpunkte auf"
+    focalPosition="center 40%"
+    shineTitle
+  >
+    <ShaderBackdrop slot="backdrop" />
+  </Banner>
+
+  <div class="content" data-reveal="up">
+    <Image src={portraitImage} alt="Jaqueline Lemke spielt Harfe" class="home__portrait" width={360} />
+    <p>
+      Als Harfenistin begleite ich Hochzeiten, Taufen, Trauerfeiern, Konzerte und Orchesterprojekte mit klassischer und
+      moderner Musik – von leiser Improvisation bis zu großen Kompositionen.
+    </p>
+  </div>
+
+  <CardGrid>
+    <Card
+      href="/about"
+      bgImg={aboutBannerImage}
+      title="Über mich"
+      description="Erleben Sie die bezaubernde Klangwelt der Harfe."
+      transitionName="hub-about"
+      revealIndex={0}
+    />
+    <Card
+      href="/audio"
+      bgImg={audioBannerImage}
+      title="Hörproben"
+      description="Ein paar Klangbeispiele meiner Musik."
+      transitionName="hub-audio"
+      revealIndex={1}
+    />
+    <Card
+      href="/contact"
+      bgImg={contactBannerImage}
+      title="Kontakt"
+      description="Ich freue mich darauf, von Ihnen zu hören!"
+      transitionName="hub-contact"
+      revealIndex={2}
+    />
+  </CardGrid>
+
+  <Giscus />
+</BaseLayout>
+
+<style>
+  .home__portrait {
+    float: right;
+    width: min(220px, 40vw);
+    margin: 0 0 var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+</style>

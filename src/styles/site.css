@@ -1,0 +1,747 @@
+/* @property makes --border-angle animatable — without it, browsers can't
+   interpolate <angle> values, so the border-glow rotation below would snap
+   through steps instead of animating smoothly. */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-glow-rotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Astro's <Image>/<Picture> emit width/height as HTML "presentational
+   hints", which set a literal pixel height even when a class only
+   constrains width — stretching the image instead of scaling it. Anything
+   without both dimensions constrained by its own class needs this fallback. */
+@layer layout {
+  img,
+  video {
+    height: auto;
+  }
+}
+
+@layer layout {
+  .center {
+    text-align: center;
+  }
+
+  /* flow-root (not the default block): contains any floated child (e.g.
+     index.astro's home__portrait) instead of letting it leak into and
+     narrow the next sibling's layout. */
+  .content {
+    display: flow-root;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-4) var(--space-5);
+  }
+
+  /* Section rhythm inside prose content, replacing manual <br><br><br>
+     spacer stacks. :not(:first-child) skips the heading that opens its own
+     container (e.g. the first h2 in .content) so it doesn't get a
+     redundant gap above it. */
+  .content h2:not(:first-child) {
+    margin-top: var(--space-6);
+  }
+
+  .content h3:not(:first-child) {
+    margin-top: var(--space-5);
+  }
+
+  .content h4:not(:first-child) {
+    margin-top: var(--space-4);
+  }
+
+  /* A [data-reveal] wrapper blocks the h3/h4:not(:first-child) rules above
+     from seeing across it, so a heading wrapped for individual reveal
+     needs its own version of the same spacing. */
+  .reveal-block:not(:first-child) {
+    margin-top: var(--space-5);
+  }
+
+  .reveal-block:has(> h2):not(:first-child) {
+    margin-top: var(--space-6);
+  }
+
+  .reveal-block:has(> h4):not(:first-child) {
+    margin-top: var(--space-4);
+  }
+
+  /* Manual break between two independent blocks that aren't separated by
+     a heading (e.g. two CardGrids stacked on one page). */
+  .section-gap {
+    margin-top: var(--space-6);
+  }
+
+  /* Smaller manual break for a paragraph-level beat that isn't its own
+     heading (a lead-in line before an image, a closing disclaimer, etc). */
+  .gap-sm {
+    margin-top: var(--space-4);
+  }
+
+  /* Clears the sticky navbar when landing on an in-page anchor so the
+     target heading isn't hidden under it. */
+  :where(h1, h2, h3, h4) {
+    scroll-margin-top: var(--nav-height);
+  }
+
+  /* Color/weight treatment only - sizes independently of whatever tag or
+     class it's paired with (e.g. .heading-display for a hero-scale heading). */
+  .text-gradient {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(120deg, var(--color-accent), var(--color-accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  .heading-display {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+  }
+
+  .quote {
+    font-size: 1.1rem;
+    color: var(--color-muted);
+    max-width: 55ch;
+  }
+
+  /* Generic pill badge. .chip alone is neutral; .chip--primary/--secondary
+     add color. Standalone use gets its own line for free from normal block
+     flow; group chips on one line by wrapping them in .chip-row instead. */
+  .chip {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.78rem;
+    border-radius: 999px;
+    padding: 0.2em 0.7em;
+    margin: 0.2em 0 0.5em;
+    color: var(--color-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+  }
+
+  .chip--primary {
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  .chip--secondary {
+    color: var(--color-accent-2);
+    background: transparent;
+    border-color: color-mix(in srgb, var(--color-accent-2) 40%, transparent);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    margin: 0.5em 0 0;
+  }
+
+  .chip-row > .chip {
+    margin: 0;
+  }
+
+  .small {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .error h1,
+  .error p {
+    margin: 0;
+  }
+
+  .error img {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+  }
+}
+
+@layer layout {
+  .button-pill {
+    display: inline-block;
+    position: relative; /* anchors the ::after glow ring below */
+    margin: 0.3em 0.4em 0.3em 0;
+    border-radius: 999px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    --mag-x: 0px;
+    --mag-y: 0px;
+    transform: translate(var(--mag-x), var(--mag-y));
+    transition: transform 0.2s ease-out;
+  }
+
+  .button-pill::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(from var(--border-angle), transparent, var(--color-accent), transparent 40%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .button-pill:hover::after {
+    opacity: 1;
+    animation: border-glow-rotate 3s linear infinite;
+  }
+
+  .button-pill a,
+  .button-pill {
+    text-decoration: none;
+  }
+
+  .button-pill a {
+    display: block;
+    padding: 0.6em 1.4em;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-fg);
+  }
+
+  .button-pill:hover {
+    background: var(--color-accent);
+  }
+
+  .button-pill:hover a {
+    color: var(--color-on-media);
+  }
+}
+
+@layer layout {
+  .cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-4);
+    max-width: var(--grid-width);
+    margin: var(--space-4) auto 0;
+    padding: var(--space-4);
+  }
+
+  /* perspective must live on .card's direct parent to affect its 3D tilt
+     transform — .card is a grandchild of .cards-wrapper. */
+  .card-perspective {
+    perspective: 800px;
+  }
+
+  .card {
+    /* A low-opacity background was tried here and made cards read as
+       visually empty — this restores real presence. */
+    --bg-img: none;
+    background-color: var(--color-surface);
+    background-image: linear-gradient(to top, var(--scrim-strong), var(--scrim-soft) 60%), var(--bg-img);
+    background-size: cover;
+    background-position: var(--bg-pos, center);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--color-on-media);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    min-height: 20em;
+    position: relative;
+    overflow: hidden;
+    contain: layout; /* single-box guarantee for view-transition-name */
+    /* --rx/--ry/--mx/--my: written by initCardTilt() in pointer.ts
+       (pointer:fine + motion-ok devices only); everyone else just gets the
+       --lift hover animation below. */
+    --rx: 0deg;
+    --ry: 0deg;
+    --mx: 50%;
+    --my: 50%;
+    --lift: 0px;
+    --scale: 1;
+    transform: translateY(var(--lift)) scale(var(--scale)) rotateX(var(--rx)) rotateY(var(--ry));
+    transition:
+      transform var(--tilt-duration) var(--tilt-ease),
+      box-shadow var(--dur-fast) var(--ease-spring);
+  }
+
+  /* pointer.ts adds this on pointerenter/pointermove, removes it debounced
+     on pointerleave. --tilt-duration/--tilt-ease also feed .reveal-armed's
+     transition in motion.css, so this override applies there too. */
+  .card.is-tracking {
+    --lift: -6px;
+    --scale: 1.015;
+    --tilt-duration: var(--dur-tilt-active);
+    --tilt-ease: linear;
+  }
+
+  /* Subtle scroll-linked swing on the card's own photo, mirroring Banner's
+     view()-timeline parallax at a much narrower range (see Card.astro's
+     narrowFrom/narrowTo). @supports/reduced-motion fall back to the static
+     background-position set above — never a broken/blank state. */
+  @keyframes card-parallax {
+    from {
+      background-position: center var(--bg-pos-narrow-from);
+    }
+    to {
+      background-position: center var(--bg-pos-narrow-to);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .card {
+        animation: card-parallax linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mx) var(--my), var(--glass-highlight-media), transparent 55%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    /* .button-pill::after uses inset: -1px so the ring protrudes past the
+       edge; .card has overflow: hidden (its image content relies on that),
+       which clipped that protruding half unevenly, so this stays inset: 0. */
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(from var(--border-angle), transparent, var(--color-accent), transparent 40%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .card:hover::after {
+    opacity: 1;
+    animation: border-glow-rotate 3s linear infinite;
+  }
+
+  /* position: relative so this stacking layer paints above other absolute
+     children regardless of DOM order. */
+  .card__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* :not(.is-tracking) so devices where pointer.ts is active (pointer:fine,
+     motion-ok) get lift/scale exclusively from the .is-tracking rule above
+     — keeps it debounced together with the rotate reset instead of
+     snapping instantly on native :hover exit. Devices where pointer.ts
+     never runs (coarse pointer, reduced motion) still get the plain
+     instant pop here. */
+  .card:hover:not(.is-tracking) {
+    --lift: -6px;
+    --scale: 1.015;
+  }
+
+  .card h2 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .card p {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-on-media) 85%, transparent);
+    font-size: 0.9rem;
+  }
+
+  .card__tags {
+    display: flex;
+    gap: 0.4em;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .card__tag {
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25em 0.7em;
+    border-radius: 999px;
+    transition: scale var(--dur-fast) var(--ease-spring);
+  }
+
+  .card__tag:hover {
+    scale: 1.12;
+  }
+
+  /* A card carrying a <audio> player (or any other embedded control) isn't
+     a whole-card link — the composer line + player sit in this slot, and
+     tilt/reveal still apply via the shared .card rules above. */
+  .card__media {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  .card__composer {
+    margin: 0 0 0.2em;
+    color: color-mix(in srgb, var(--color-on-media) 85%, transparent);
+    font-size: 0.9rem;
+  }
+}
+
+@layer layout {
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background:
+      linear-gradient(180deg, var(--glass-highlight-fade), transparent 60%),
+      color-mix(in srgb, var(--color-surface) var(--nav-glass-opacity), transparent);
+    backdrop-filter: blur(var(--nav-glass-blur)) saturate(var(--nav-glass-saturate)) contrast(1.06);
+    border-bottom: 1px solid var(--color-line);
+    box-shadow:
+      inset 0 1px 0 var(--glass-highlight),
+      0 12px 24px -20px rgba(20, 8, 10, 0.5);
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+
+  .navbar__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    max-width: var(--grid-width);
+    margin: 0 auto;
+  }
+
+  .navbar__logo {
+    color: var(--color-fg);
+    display: block;
+  }
+
+  .navbar__menu-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar__link {
+    position: relative;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  /* Only one link is ever active per document, so this view-transition-name
+     stays trivially unique. */
+  .navbar__indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    view-transition-name: nav-indicator;
+  }
+
+  /* Checkbox-driven disclosure, no JS: .navbar__toggle-input is the actual
+     interactive/focusable control, .navbar__toggle is just its visible label. */
+  .navbar__toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .navbar__toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0.5em;
+  }
+
+  .navbar__toggle-input:focus-visible + .navbar__toggle {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+  }
+
+  .navbar__toggle svg {
+    height: 1.6em;
+    transition: transform 600ms var(--ease-in-out);
+  }
+
+  .navbar__toggle-line {
+    fill: none;
+    stroke: var(--color-fg);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    transition:
+      stroke-dasharray 600ms var(--ease-in-out),
+      stroke-dashoffset 600ms var(--ease-in-out);
+  }
+
+  .navbar__toggle-line--top-bottom {
+    stroke-dasharray: 12 63;
+  }
+
+  .navbar__toggle-input:checked ~ .navbar__toggle svg {
+    transform: rotate(-45deg);
+  }
+
+  .navbar__toggle-input:checked ~ .navbar__toggle .navbar__toggle-line--top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
+
+  @media (max-width: 720px) {
+    .navbar__toggle {
+      display: flex;
+    }
+
+    /* interpolate-size: allow-keywords lets height animate 0 -> auto for
+       real; unsupported browsers just get an instant open/close instead of
+       an animated one. visibility (not display: none) hides the menu when
+       closed, matching the same a11y-tree/tab-order exclusion without the
+       transition-killing display:none <-> block bug. */
+    .navbar__menu {
+      interpolate-size: allow-keywords;
+      visibility: hidden;
+      height: 0;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--color-surface);
+      transition:
+        height var(--dur-base) var(--ease-in-out),
+        opacity var(--dur-base) var(--ease-in-out),
+        visibility 0s var(--dur-base);
+    }
+
+    .navbar__menu-list {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--space-3) var(--space-4);
+      gap: var(--space-3);
+    }
+
+    .navbar__toggle-input:checked ~ .navbar__menu {
+      visibility: visible;
+      height: auto;
+      opacity: 1;
+      transition-delay: 0s;
+    }
+
+    /* !important: keyboard focus landing in the nav (e.g. Tab from the
+       address bar) must not leave it scrolled off-screen, and the open
+       mobile menu must never slide away under the user — both need to
+       beat nav-scroll.ts's inline transform. */
+    .navbar:focus-within,
+    .navbar:has(.navbar__toggle-input:checked) {
+      transform: none !important;
+    }
+  }
+}
+
+@layer layout {
+  .footer__container {
+    border-top: 1px solid var(--color-line);
+    margin-top: var(--space-5);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .footer__link-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    max-width: var(--grid-width);
+    margin: 0 auto var(--space-4);
+  }
+
+  .footer__link-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  .footer__link-column h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+    margin: 0 0 0.3em;
+  }
+
+  .footer__link-column a {
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .footer__social-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    max-width: var(--grid-width);
+    margin: 0 auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .footer__logo {
+    color: var(--color-fg);
+    display: block;
+  }
+
+  .footer__legal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .footer__rights {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .footer__ai-notice {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  .footer__social-icons {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .footer__social-icon {
+    color: var(--color-fg);
+    font-size: 1.2rem;
+    display: flex;
+    transition:
+      translate var(--dur-fast) var(--ease-spring),
+      scale var(--dur-fast) var(--ease-spring),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .footer__social-icon:hover {
+    translate: 0 -3px;
+    scale: 1.15;
+    color: var(--color-accent);
+  }
+}
+
+/* Lives here (global), not in Gallery.astro's scoped <style>: the dots are
+   created client-side via document.createElement, and Astro's style
+   scoping attribute is only added to server-rendered markup — a scoped
+   rule wouldn't match these elements at all. */
+@layer layout {
+  .gallery__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: var(--space-2);
+  }
+
+  .gallery__dot {
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-line);
+    cursor: pointer;
+    --mag-x: 0px;
+    --mag-y: 0px;
+    transform: translate(var(--mag-x), var(--mag-y));
+    transition:
+      width var(--dur-fast) var(--ease-spring),
+      background var(--dur-fast) var(--ease-spring),
+      transform 0.2s ease-out;
+  }
+
+  .gallery__dot:hover {
+    background: var(--color-muted);
+  }
+
+  .gallery__dot:focus-visible {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+
+  .gallery__dot.is-active {
+    width: 22px;
+    background: var(--color-accent);
+  }
+}
+
+@layer layout {
+  .content img,
+  .content video {
+    border-radius: var(--radius-md);
+  }
+}

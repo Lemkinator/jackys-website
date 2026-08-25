@@ -1,0 +1,66 @@
+---
+import { getImage } from 'astro:assets';
+import defaultImage from '@/assets/logo/icon.png';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata | string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+// Every current caller passes ImageMetadata; the string branch is kept
+// only because getImage() accepts either type anyway.
+const { title, description, image = defaultImage, type = 'website', noindex = false } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+// Sharp flattens alpha to black instead of erroring, so forcing every image
+// to jpg silently blacked out transparent PNGs (logo) in link previews.
+// Keep png output for png sources.
+const resolvedImage =
+  typeof image === 'string'
+    ? image
+    : (
+        await getImage({
+          src: image,
+          format: image.format === 'png' ? 'png' : 'jpg',
+          width: Math.min(1200, image.width),
+        })
+      ).src;
+const imageUrl = new URL(resolvedImage, Astro.site);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+<meta name="author" content="Jaqueline Lemke" />
+<meta name="publisher" content="Jaqueline Lemke" />
+<meta name="theme-color" content="#faf3f4" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#171114" media="(prefers-color-scheme: dark)" />
+<link rel="canonical" href={canonicalUrl} />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- Open Graph -->
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:locale" content="de_DE" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:domain" content="jackys-harfe.de" />
+<meta property="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />

@@ -1,0 +1,96 @@
+---
+import { Font } from 'astro:assets';
+import Seo from '@/components/Seo.astro';
+import JsonLd from '@/components/JsonLd.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/tokens.css';
+import '@/styles/base.css';
+import '@/styles/site.css';
+import '@/styles/motion.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata | string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const { title, description, image, type, noindex } = Astro.props;
+
+// Set PUBLIC_GOATCOUNTER_CODE in .env to enable (see .env.example).
+const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <!-- Sets [data-theme] before first paint — no flash of the wrong theme.
+         Runs on every page (no <ClientRouter />, see motion.css), so a
+         stored choice or the OS setting applies immediately every time,
+         not just on the first load of an SPA. -->
+    <script is:inline>
+      try {
+        var stored = localStorage.getItem('theme');
+        document.documentElement.dataset.theme =
+          stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch (e) {
+        /* private mode: fall through to the CSS media-query default */
+      }
+    </script>
+    <Seo title={title} description={description} image={image} type={type} noindex={noindex} />
+    <Font cssVariable="--font-kumbh" preload />
+    <JsonLd
+      data={{
+        '@type': 'Person',
+        name: 'Jaqueline Lemke',
+        url: 'https://www.jackys-harfe.de',
+        sameAs: ['https://www.instagram.com/jackyfleur/'],
+      }}
+    />
+    {
+      goatcounterCode && (
+        <script
+          is:inline
+          data-goatcounter={`https://${goatcounterCode}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
+  </head>
+  <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+<script>
+  import { initKonami } from '@/scripts/konami';
+  import { initReveal, autoRevealSections } from '@/scripts/reveal';
+  import { initMagnetic } from '@/scripts/magnetic';
+  initKonami();
+  // Must run before initReveal, which collects the [data-reveal] elements this creates.
+  autoRevealSections('.content');
+  // Runs once globally — every [data-reveal] element on the page (not just
+  // card grids) gets picked up.
+  initReveal();
+  // .button-pill is safe to init here since it's always server-rendered by
+  // this point; .gallery__dot is created client-side by gallery.ts, which
+  // calls initMagnetic() itself once its dots exist.
+  initMagnetic('.button-pill');
+
+  console.log(
+    '%c jackys-harfe.de ',
+    'background:#b8455f;color:#faf3f4;font-weight:800;padding:2px 8px;border-radius:4px;',
+  );
+  console.log(
+    '%cGefällt dir die Seite? Quellcode: https://github.com/Lemkinator/jackys-website\n' +
+      'Psst — hier gibt es einen Konami-Code.',
+    'color:#a49196;font-size:12px;',
+  );
+</script>

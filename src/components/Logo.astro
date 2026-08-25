@@ -1,0 +1,38 @@
+---
+// Inline (not an <img src="mark.svg">) so `currentColor` picks up the
+// surrounding text color and flips with the theme for free. Keep this
+// path data identical to src/assets/logo/mark.svg (the favicon
+// generation source) — same J-as-harp-pillar-and-neck mark, just
+// currentColor instead of a fixed hex.
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 32, class: className } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 100 100"
+  fill="none"
+  role="img"
+  aria-label="Jackys Harfe Logo"
+>
+  <path
+    d="M26,12 C40,8 60,8 68,20 C74,28 76,40 76,55 C76,68 74,78 66,84 C60,88 50,89 42,86"
+    stroke="currentColor"
+    stroke-width="7"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+  <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round">
+    <line x1="65.1" y1="16.6" x2="69.9" y2="22.9"></line>
+    <line x1="59.1" y1="12.7" x2="73.6" y2="32.1"></line>
+    <line x1="52.2" y1="10.5" x2="75.3" y2="41.7"></line>
+    <line x1="45" y1="9.6" x2="76" y2="51.5"></line>
+    <line x1="37.8" y1="9.8" x2="75.8" y2="61.4"></line>
+    <line x1="30.6" y1="10.9" x2="74.3" y2="71.1"></line>
+  </g>
+</svg>

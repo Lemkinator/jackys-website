@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Giscus from '@/components/Giscus.astro';
+import Gallery from '@/components/Gallery.astro';
+import Banner from '@/components/Banner.astro';
+import bannerImg from '@/assets/about/banner.jpg';
+import harps1Img from '@/assets/about/harps1.jpg';
+import harp1Img from '@/assets/about/harp1.jpg';
+import orchestra1Img from '@/assets/about/orchestra1.jpg';
+import concertHarp1Img from '@/assets/about/concert-harp-1.jpg';
+import concertHarp2Img from '@/assets/about/concert-harp-2.jpg';
+---
+
+<BaseLayout title="Über mich – Jackys Harfe" description="Über Jaqueline Lemke, Harfenistin" image={bannerImg}>
+  <Banner
+    image={bannerImg}
+    title="Über mich"
+    subtitle="Saiten, die mehr sagen als Worte."
+    imageAlt="Nahaufnahme von Händen, die während einer Orchesterprobe die Saiten einer Harfe zupfen"
+    transitionName="hub-about"
+  />
+
+  <div class="content">
+    <h2 id="me" class="heading-display text-gradient">Jaqueline Lemke – Harfenistin</h2>
+    <p>
+      Mit acht Jahren entdeckte ich meine Leidenschaft für die Harfe. Im Laufe der Jahre vertiefte ich mich in
+      verschiedene Stilrichtungen – von Improvisation über klassische Kompositionen bis hin zu Filmmusik.
+    </p>
+    <p>
+      Heute begleite ich mit meiner Musik verschiedenste Anlässe: Von emotionalen Momenten bei Hochzeiten und Taufen
+      über Trauerfeiern bis hin zu Orchesterprojekten, Konzerten und musikalischen Beiträgen in Kirchen.
+    </p>
+
+    <Gallery>
+      <Image src={harps1Img} alt="" />
+      <Image src={harp1Img} alt="" />
+      <Image src={orchestra1Img} alt="" />
+    </Gallery>
+
+    <h2 class="heading-display text-gradient">Meine Harfe</h2>
+    <p>Aktuell spiele ich auf der Lyon &amp; Healy Konzertharfe (Chicago CG Extended).</p>
+
+    <Gallery full>
+      <Image
+        src={concertHarp1Img}
+        alt="Lyon & Healy Konzertharfe (Chicago CG Extended) auf der Bühne eines leeren Konzertsaals"
+        width={1400}
+        format="avif"
+      />
+      <Image
+        src={concertHarp2Img}
+        alt="Lyon & Healy Konzertharfe (Chicago CG Extended) auf einer Konzertbühne vor der Orgel"
+        width={1400}
+        format="avif"
+      />
+    </Gallery>
+  </div>
+
+  <Giscus />
+</BaseLayout>

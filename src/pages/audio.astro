@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Giscus from '@/components/Giscus.astro';
+import CardGrid from '@/components/CardGrid.astro';
+import Card from '@/components/Card.astro';
+import Banner from '@/components/Banner.astro';
+import AudioPlayer from '@/components/AudioPlayer.astro';
+import bannerImg from '@/assets/audio/banner.jpg';
+
+const tracks = (await getCollection('tracks')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Hörproben – Jackys Harfe" description="Hörproben von Jaqueline Lemke, Harfenistin" image={bannerImg}>
+  <Banner
+    image={bannerImg}
+    title="Hörproben"
+    subtitle="Ein paar Klangbeispiele meiner Musik."
+    imageAlt="Nahaufnahme der Saiten einer Harfe im Vordergrund vor einem musizierenden Orchester"
+    transitionName="hub-audio"
+  />
+
+  <CardGrid>
+    {
+      tracks.map((track, i) => (
+        <Card bgImg={track.data.coverImage} title={track.data.title} revealIndex={i}>
+          <Fragment slot="media">
+            <p class="card__composer">{track.data.composer}</p>
+            <AudioPlayer src={track.data.audio} title={`${track.data.title} – ${track.data.composer}`} />
+          </Fragment>
+        </Card>
+      ))
+    }
+  </CardGrid>
+
+  <Giscus />
+</BaseLayout>

@@ -1,0 +1,154 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  src: string;
+  title: string;
+}
+
+const { src, title } = Astro.props;
+---
+
+<div class="audio-player" data-audio-player>
+  <audio preload="metadata" title={title} data-audio-el>
+    <source src={src} type="audio/mpeg" />
+    Dein Browser unterstützt das HTML Audio Element nicht.
+  </audio>
+
+  <button type="button" class="audio-player__play" aria-label="Abspielen" data-play-btn>
+    <span data-icon-play><Icon name="play" /></span>
+    <span data-icon-pause hidden><Icon name="pause" /></span>
+  </button>
+
+  <input type="range" class="audio-player__timeline" min="0" max="0" step="0.01" value="0" aria-label="Abspielposition" data-timeline />
+
+  <span class="audio-player__time" data-time>0:00 / 0:00</span>
+
+  <div class="audio-player__volume" data-volume-group>
+    <button type="button" class="audio-player__volume-btn" aria-label="Stummschalten" data-volume-btn>
+      <span data-icon-vol><Icon name="volume" /></span>
+      <span data-icon-vol-mute hidden><Icon name="volume-mute" /></span>
+    </button>
+    <input type="range" class="audio-player__volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Lautstärke" data-volume-slider />
+  </div>
+</div>
+
+<style>
+  @layer components {
+    .audio-player {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      color: var(--color-on-media);
+    }
+
+    .audio-player audio {
+      display: none;
+    }
+
+    .audio-player__play,
+    .audio-player__volume-btn {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 2.8em;
+      height: 2.8em;
+      padding: 0;
+      border: none;
+      border-radius: 999px;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out);
+    }
+
+    .audio-player__play :global(svg),
+    .audio-player__volume-btn :global(svg) {
+      width: 2.4em;
+      height: 2.4em;
+    }
+
+    .audio-player__play:hover,
+    .audio-player__volume-btn:hover {
+      background: color-mix(in srgb, var(--color-on-media) 16%, transparent);
+    }
+
+    .audio-player__play:focus-visible,
+    .audio-player__volume-btn:focus-visible,
+    .audio-player__timeline:focus-visible,
+    .audio-player__volume-slider:focus-visible {
+      outline: 2px solid var(--color-on-media);
+      outline-offset: 2px;
+    }
+
+    .audio-player__timeline,
+    .audio-player__volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--color-on-media) 30%, transparent);
+      cursor: pointer;
+    }
+
+    .audio-player__timeline {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .audio-player__timeline::-webkit-slider-thumb,
+    .audio-player__volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-on-media);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-on-media) 30%, transparent);
+    }
+
+    .audio-player__timeline::-moz-range-thumb,
+    .audio-player__volume-slider::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border: none;
+      border-radius: 50%;
+      background: var(--color-on-media);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-on-media) 30%, transparent);
+    }
+
+    .audio-player__time {
+      flex: none;
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      color: color-mix(in srgb, var(--color-on-media) 85%, transparent);
+    }
+
+    .audio-player__volume {
+      display: flex;
+      align-items: center;
+      flex: none;
+    }
+
+    .audio-player__volume-slider {
+      width: 0;
+      opacity: 0;
+      margin-left: 0;
+      transition:
+        width var(--dur-fast) var(--ease-out),
+        opacity var(--dur-fast) var(--ease-out),
+        margin-left var(--dur-fast) var(--ease-out);
+    }
+
+    .audio-player__volume.is-expanded .audio-player__volume-slider {
+      width: 4.5em;
+      opacity: 1;
+      margin-left: 0.4em;
+    }
+  }
+</style>
+
+<script>
+  import { initAudioPlayers } from '@/scripts/audio-player';
+  initAudioPlayers();
+</script>

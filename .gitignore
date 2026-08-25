@@ -1,6 +1,15 @@
 .DS_Store
 Thumbs.db
 
+# Astro / Node
+node_modules/
+dist/
+.astro/
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
 # .idea/ — ignore contents, whitelist only what the project needs
 /.idea/*
 !/.idea/.gitignore
@@ -9,7 +18,5 @@ Thumbs.db
 !/.idea/inspectionProfiles/
 !/.idea/inspectionProfiles/**
 !/.idea/jackys-website.iml
-!/.idea/jsLibraryMappings.xml
-!/.idea/misc.xml
 !/.idea/modules.xml
 !/.idea/vcs.xml

@@ -1,0 +1,14 @@
+---
+
+---
+
+<section class="cards-wrapper">
+  <slot />
+</section>
+<script>
+  // Astro dedupes identical inline module scripts per page, so this runs
+  // once even with multiple CardGrids on one page (e.g. the homepage).
+  import { initCardTilt } from '@/scripts/pointer';
+  // initReveal() runs globally from BaseLayout.astro, not per-grid.
+  initCardTilt();
+</script>

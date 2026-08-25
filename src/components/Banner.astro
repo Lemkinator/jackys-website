@@ -1,0 +1,250 @@
+---
+import { getImage } from 'astro:assets';
+
+interface Props {
+  image: ImageMetadata | string;
+  title: string;
+  subtitle?: string;
+  // Must match the origin Card's own transitionName (Card.astro) for the
+  // card->banner view-transition morph to work.
+  transitionName?: string;
+  shineTitle?: boolean;
+  // Screen-reader text for the CSS background-image (no native alt) — also
+  // carries the required EU AI Act Art. 50(4) AI-content disclosure.
+  imageAlt?: string;
+  // CSS background-position, e.g. "center 25%". Also switches the
+  // scroll-parallax below to a narrow swing centered on this point instead
+  // of the default wide one — see hasCustomFocal.
+  focalPosition?: string;
+  // Per-banner overrides for the title/subtitle typing effect (ms). Falls
+  // back to typing.ts's own defaults when omitted.
+  typeSpeed?: number;
+  pauseAfterType?: number;
+}
+
+const {
+  image,
+  title,
+  subtitle,
+  transitionName,
+  shineTitle = false,
+  imageAlt,
+  focalPosition = 'center',
+  typeSpeed,
+  pauseAfterType,
+} = Astro.props;
+
+// getImage() gives the same AVIF/resized output as a URL, for the CSS
+// background-image (which can't use <img srcset>). Capped at the source's
+// own width: Sharp's withoutEnlargement silently ships a pixelated
+// undersized image with no build warning if the requested width exceeds it.
+async function resolve(src: ImageMetadata | string): Promise<string> {
+  return typeof src === 'string'
+    ? src
+    : (await getImage({ src, format: 'avif', width: Math.min(1920, src.width) })).src;
+}
+
+const resolvedImage = await resolve(image);
+
+// Default parallax swings 15%->85% via animation-range: cover; measured in
+// Chromium, a custom focalPosition can still get overridden mid-swing (e.g.
+// "center 15%" computing as "50% 54.7%" at scroll 0). A custom focal gets a
+// narrow +/-5pt swing centered on itself instead, computed here since
+// calc()/clamp() inside animated @keyframes values didn't reliably interpolate.
+const hasCustomFocal = focalPosition !== 'center';
+const focalY = Number(/(-?\d+(?:\.\d+)?)%\s*$/.exec(focalPosition)?.[1] ?? 50);
+const narrowFrom = `${Math.max(0, focalY - 5)}%`;
+const narrowTo = `${Math.min(100, focalY + 5)}%`;
+
+const style = [
+  `--bg-img: url(${resolvedImage})`,
+  `--bg-pos: ${focalPosition}`,
+  hasCustomFocal && `--bg-pos-narrow-from: ${narrowFrom}`,
+  hasCustomFocal && `--bg-pos-narrow-to: ${narrowTo}`,
+  transitionName && `view-transition-name: ${transitionName}`,
+]
+  .filter(Boolean)
+  .join('; ');
+
+// aria-label carries the full text so screen readers don't see the typing
+// animation's mid-type fragments (the span itself is aria-hidden).
+const typingStrings = [title, subtitle].filter((s): s is string => Boolean(s));
+const ariaLabel = typingStrings.join('. ');
+---
+
+<div class="banner" style={style} data-static-focal={hasCustomFocal || undefined}>
+  {imageAlt && <span class="sr-only">{imageAlt}</span>}
+  <slot name="backdrop" />
+  <div class="banner__content">
+    <h1 class:list={{ 'banner__title--shine': shineTitle }} aria-label={ariaLabel}>
+      <span
+        class="banner__typing"
+        aria-hidden="true"
+        data-typing={JSON.stringify(typingStrings)}
+        data-type-speed={typeSpeed}
+        data-pause-after-type={pauseAfterType}>{typingStrings.join(' — ')}</span
+      >
+    </h1>
+    <slot />
+  </div>
+</div>
+
+<script>
+  import { initTyping } from '@/scripts/typing';
+  initTyping();
+</script>
+
+<style>
+  .banner {
+    position: relative;
+    height: 60vh;
+    min-height: 320px;
+    max-height: 560px;
+    display: flex;
+    align-items: flex-end;
+    background-image: var(--bg-img);
+    background-size: cover;
+    background-position: var(--bg-pos);
+    contain: layout; /* required for view-transition-name to apply to a single box */
+  }
+
+  /* Lives here, not motion.css: Astro scopes this component's styles by
+     hashing .banner's selector, so a global-stylesheet rule wouldn't match it. */
+  @keyframes banner-parallax {
+    from {
+      background-position: center 15%;
+    }
+    to {
+      background-position: center 85%;
+    }
+  }
+
+  @keyframes banner-parallax-narrow {
+    from {
+      background-position: center var(--bg-pos-narrow-from);
+    }
+    to {
+      background-position: center var(--bg-pos-narrow-to);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .banner:not([data-static-focal]) {
+        animation: banner-parallax linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+
+      .banner[data-static-focal] {
+        animation: banner-parallax-narrow linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+
+  .banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  /* Uses --color-bg (already themed), not a fixed color, so the scrim
+     flips light/dark with the page instead of needing its own media query —
+     the title text is --color-fg now, so it needs a same-theme scrim under
+     it for contrast against whatever tone the photo happens to be. The top
+     stop stays nonzero (not fully transparent): that's the strip the sticky
+     navbar sits over, and its backdrop-filter needs some scrim wash under
+     it for contrast against the shader backdrop, not a raw unmasked view. */
+  .banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-bg) 80%, transparent),
+      color-mix(in srgb, var(--color-bg) 15%, transparent) 60%,
+      color-mix(in srgb, var(--color-bg) 8%, transparent)
+    );
+  }
+
+  .banner__content {
+    position: relative;
+    z-index: 1;
+    max-width: var(--grid-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    color: var(--color-fg);
+  }
+
+  .banner__content h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* Gradient tiles seamlessly at 200% (both edges are --color-fg), so the
+     0 -> -200% background-position loop has no visible seam. Peak is a
+     color-mix blend toward --color-accent, not a hard white/accent jump —
+     against --color-fg (near-black in light mode, near-white in dark) a
+     literal #fff or full-accent stop reads as a harsh flash, not a glow. */
+  .banner__content h1.banner__title--shine {
+    background: linear-gradient(
+      100deg,
+      var(--color-fg) 0%,
+      var(--color-fg) 40%,
+      color-mix(in srgb, var(--color-fg) 35%, var(--color-accent) 65%) 50%,
+      var(--color-fg) 62%,
+      var(--color-fg) 100%
+    );
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .banner__content h1.banner__title--shine {
+      animation: hero-shine 5s linear infinite;
+    }
+  }
+
+  @keyframes hero-shine {
+    to {
+      background-position: -200% center;
+    }
+  }
+
+  /* .is-typing is only added by typing.ts after it confirms motion is allowed;
+     blinks only while idle (.is-active-typing absent), solid during
+     typing/deleting. var(--color-fg), not currentColor: shineTitle sets the
+     h1's real `color` to transparent for its background-clip: text gradient,
+     which the cursor would otherwise inherit and render invisible. */
+  .banner__content h1 .banner__typing.is-typing::after {
+    content: '';
+    display: inline-block;
+    width: 0.09em;
+    height: 0.85em;
+    margin-left: 0.1em;
+    background: var(--color-fg);
+    vertical-align: -0.05em;
+  }
+
+  .banner__content h1 .banner__typing.is-typing:not(.is-active-typing)::after {
+    animation: typing-cursor-blink 1s step-end infinite;
+  }
+
+  @keyframes typing-cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

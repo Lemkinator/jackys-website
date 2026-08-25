@@ -1,0 +1,45 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer__container">
+  <div data-reveal="up">
+    <div class="footer__link-group">
+      <div class="footer__link-column">
+        <h2>Links</h2>
+        <a href="/imprint">Impressum</a>
+        <a href="/contact">Kontakt</a>
+      </div>
+    </div>
+  </div>
+  <section data-reveal="stagger" style="--i: 1">
+    <div class="footer__social-inner">
+      <a href="/" aria-label="Jackys Harfe – Startseite">
+        <Logo class="footer__logo" size={40} />
+      </a>
+      <div class="footer__legal">
+        <p class="footer__rights">&copy; Jaqueline Lemke {year}. Alle Rechte vorbehalten.</p>
+        <p class="footer__ai-notice">
+          Auf dieser Website werden teilweise KI-generierte Bilder verwendet (siehe Bildbeschreibungen).
+        </p>
+      </div>
+      <div class="footer__social-icons">
+        <a class="footer__social-icon" aria-label="E-Mail" href="mailto:info@jackys-harfe.de">
+          <Icon name="email" />
+        </a>
+        <a
+          class="footer__social-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+          href="https://www.instagram.com/jackyfleur/"
+        >
+          <Icon name="instagram" />
+        </a>
+      </div>
+    </div>
+  </section>
+</footer>

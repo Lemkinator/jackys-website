@@ -1,0 +1,162 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+  // full: landscape items fill the content column width, one at a time.
+  // default: compact, each item sized by its own aspect ratio.
+  full?: boolean;
+}
+
+const { class: className, full = false } = Astro.props;
+---
+
+<div
+  class:list={['gallery', className, { 'gallery--full': full }]}
+  data-goto-label="Zu Bild {n} von {total}"
+  data-reveal="up"
+>
+  <div class="gallery__track">
+    <slot />
+  </div>
+  <button type="button" class="gallery__arrow gallery__arrow--prev" aria-label="Vorheriges Bild" disabled>
+    <Icon name="chevron" />
+  </button>
+  <button type="button" class="gallery__arrow gallery__arrow--next" aria-label="Nächstes Bild" disabled>
+    <Icon name="chevron" />
+  </button>
+</div>
+<script>
+  import { initGallery } from '@/scripts/gallery';
+  initGallery();
+</script>
+
+<style>
+  .gallery {
+    position: relative;
+  }
+
+  .gallery__arrow {
+    appearance: none;
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-bg) 70%, transparent);
+    color: var(--color-fg);
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition:
+      background var(--dur-fast) var(--ease-spring),
+      opacity var(--dur-fast) var(--ease-spring);
+  }
+
+  .gallery__arrow:hover {
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  }
+
+  .gallery__arrow:focus-visible {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+
+  .gallery__arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gallery__arrow--prev {
+    left: var(--space-2);
+  }
+
+  .gallery__arrow--next {
+    right: var(--space-2);
+  }
+
+  .gallery__arrow--next :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .gallery__track {
+    display: flex;
+    /* flex-start prevents cross-axis stretch, which combined with
+       height:auto silently distorted images vertically. */
+    align-items: flex-start;
+    gap: var(--space-2);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: var(--space-2);
+    cursor: grab;
+  }
+
+  /* Scrollbar only hides once gallery.ts confirms it's wired up (dots, wheel,
+     drag) — otherwise a no-JS visitor loses the only visible sign this
+     scrolls, since the arrow buttons above start disabled/invisible too. */
+  .gallery.is-ready .gallery__track {
+    scrollbar-width: none;
+  }
+
+  .gallery.is-ready .gallery__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Suspended during drag: snap fighting live scrollLeft writes (see
+     gallery.ts) reads as stutter. Also blocks the native image-drag
+     ghost/text-selection a raw mouse drag would trigger. */
+  .gallery__track.is-dragging {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .gallery__track.is-dragging :global(img),
+  .gallery__track.is-dragging :global(video) {
+    pointer-events: none;
+  }
+
+  /* Slides may be a bare <img>/<video> or wrapped in a <div> with a
+     <p class="description"> caption — flex: 0 0 auto shrink-wraps either case. */
+  .gallery__track > :global(*) {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+
+  .gallery__track :global(img),
+  .gallery__track :global(video) {
+    border-radius: var(--radius-md);
+    display: block;
+    /* max-height (not height) + explicit width/height:auto: Chrome only
+       jointly preserves aspect ratio against both max-* caps when auto is
+       declared in this same rule, not just inherited from site.css's
+       img,video{height:auto}. */
+    width: auto;
+    height: auto;
+    max-height: min(60vh, 480px);
+    /* % of the track's own box, not the viewport: 90vw would measure past
+       .content's side padding and could exceed the track's available width
+       on narrow screens. */
+    max-width: 90%;
+  }
+
+  .gallery--full .gallery__track > :global(*) {
+    width: 100%;
+  }
+
+  .gallery--full .gallery__track :global(img),
+  .gallery--full .gallery__track :global(video) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+  }
+</style>

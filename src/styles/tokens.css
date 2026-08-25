@@ -1,0 +1,139 @@
+/* Light values live on bare :root so a stored 'light' choice (or no stored
+   choice at all under a light system) always has something to fall back to.
+   Dark values are declared twice — once for "system prefers dark and the
+   visitor hasn't overridden it", once for "the visitor explicitly chose
+   dark" — kept adjacent so they can't drift apart. See src/scripts/theme.ts
+   for how [data-theme] gets set. */
+:root {
+  color-scheme: light;
+
+  --color-bg: #f7dde3;
+  --color-surface: #f2e5e6;
+  --color-fg: #241a1d;
+  --color-muted: #756266;
+  --color-accent: #b8455f;
+  --color-accent-2: #e08a6f;
+  --color-line: color-mix(in srgb, var(--color-fg) 12%, transparent);
+  /* --glass-highlight is the crisp 1px inset edge on the navbar's glass
+     panel; --glass-highlight-fade is the same highlight spread across the
+     top-fade gradient behind it, so it must stay much weaker or that large
+     area reads as a flat painted gradient instead of a thin glass sheen. */
+  --glass-highlight: color-mix(in srgb, #fff 65%, transparent);
+  --glass-highlight-fade: color-mix(in srgb, #fff 28%, transparent);
+  --shadow-sm: 0 12px 30px -12px rgba(120, 60, 70, 0.28);
+
+  /* Sit on top of a photo, not the page — same in both themes. */
+  --color-on-media: #f7f2f3;
+  --scrim-strong: rgba(20, 8, 10, 0.85);
+  --scrim-soft: rgba(20, 8, 10, 0.15);
+  /* Card's pointer-glow sits on its bgImg photo, not the page surface — every
+     card photo is dark-toned regardless of site theme, so this can't inherit
+     --glass-highlight (that one's tuned per-theme for the nav's glass panel,
+     which does sit on the page). Reuses the value that already looked right
+     against dark photos in dark mode; the old light-mode 55% white was
+     blowing out against the same dark photos. */
+  --glass-highlight-media: color-mix(in srgb, #fff 20%, transparent);
+
+  --font-body: var(--font-kumbh), system-ui, sans-serif;
+
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+
+  --nav-height: 5rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --content-width: 700px;
+  --grid-width: 1100px;
+
+  --dur-fast: 0.18s;
+  --dur-base: 0.4s;
+  --dur-slow: 0.9s;
+  --dur-tilt: 1.5s;
+  --dur-tilt-active: 0.05s;
+  /* Inherited default so motion.css's [data-reveal].reveal-armed can list
+     "transform" in its transition unconditionally, on any element, without
+     an unset var() invalidating the whole transition-duration list —
+     .card.is-tracking (site.css) overrides both on hover. */
+  --tilt-duration: var(--dur-tilt);
+  --tilt-ease: var(--ease-spring);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: linear(
+    0,
+    0.221 2.2%,
+    0.821 8.2%,
+    1.101 11.6%,
+    1.209 13.5%,
+    1.24 15%,
+    1.201 17.4%,
+    1.098 21.1%,
+    1.011 26.9%,
+    0.986 32.5%,
+    0.996 39%,
+    1.003 51%,
+    1
+  );
+  --reveal-distance: 2.5rem;
+
+  --nav-glass-opacity: 32%;
+  --nav-glass-opacity-scrolled: 76%;
+  --nav-glass-blur: 28px;
+  --nav-glass-blur-scrolled: 46px;
+  --nav-glass-saturate: 260%;
+  --nav-glass-saturate-scrolled: 300%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --color-bg: #221527;
+    --color-surface: #221a1d;
+    --color-fg: #f5ecee;
+    --color-muted: #a49196;
+    --color-accent: #ff8fa8;
+    --color-accent-2: #ffc4a3;
+    --color-line: color-mix(in srgb, var(--color-fg) 8%, transparent);
+    --glass-highlight: color-mix(in srgb, #fff 26%, transparent);
+    --glass-highlight-fade: color-mix(in srgb, #fff 11%, transparent);
+    --shadow-sm: 0 12px 30px -12px rgba(20, 20, 30, 0.25);
+
+    --nav-glass-opacity: 30%;
+    --nav-glass-opacity-scrolled: 80%;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #171114;
+  --color-surface: #221a1d;
+  --color-fg: #f5ecee;
+  --color-muted: #a49196;
+  --color-accent: #ff8fa8;
+  --color-accent-2: #ffc4a3;
+  --color-line: color-mix(in srgb, var(--color-fg) 8%, transparent);
+  --glass-highlight: color-mix(in srgb, #fff 26%, transparent);
+  --glass-highlight-fade: color-mix(in srgb, #fff 11%, transparent);
+  --shadow-sm: 0 12px 30px -12px rgba(20, 20, 30, 0.25);
+
+  --nav-glass-opacity: 30%;
+  --nav-glass-opacity-scrolled: 80%;
+}
+
+/* Toggled by konami.ts's easter egg. Every scroll/view-transition rule
+   reads these via var(), so bumping the tokens is enough to slow
+   everything down together; fixed-duration hover micro-interactions are
+   unaffected by design. */
+:root.max-motion {
+  --dur-fast: 0.4s;
+  --dur-base: 0.9s;
+  --dur-slow: 1.8s;
+  --reveal-distance: 7rem;
+}
