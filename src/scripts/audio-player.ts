@@ -32,7 +32,20 @@ export function initAudioPlayers(selector = '[data-audio-player]'): void {
     const iconVolume = player.querySelector<HTMLElement>('[data-icon-vol]');
     const iconVolumeMute = player.querySelector<HTMLElement>('[data-icon-vol-mute]');
     const volumeSlider = player.querySelector<HTMLInputElement>('[data-volume-slider]');
-    if (!audio || !playBtn || !iconPlay || !iconPause || !time || !timeline || !volumeGroup || !volumeBtn || !iconVolume || !iconVolumeMute || !volumeSlider) return;
+    if (
+      !audio ||
+      !playBtn ||
+      !iconPlay ||
+      !iconPause ||
+      !time ||
+      !timeline ||
+      !volumeGroup ||
+      !volumeBtn ||
+      !iconVolume ||
+      !iconVolumeMute ||
+      !volumeSlider
+    )
+      return;
 
     function setPlayingIcon(playing: boolean): void {
       iconPlay!.hidden = playing;

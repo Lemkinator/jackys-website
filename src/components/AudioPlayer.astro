@@ -20,7 +20,16 @@ const { src, title } = Astro.props;
     <span data-icon-pause hidden><Icon name="pause" /></span>
   </button>
 
-  <input type="range" class="audio-player__timeline" min="0" max="0" step="0.01" value="0" aria-label="Abspielposition" data-timeline />
+  <input
+    type="range"
+    class="audio-player__timeline"
+    min="0"
+    max="0"
+    step="0.01"
+    value="0"
+    aria-label="Abspielposition"
+    data-timeline
+  />
 
   <span class="audio-player__time" data-time>0:00 / 0:00</span>
 
@@ -29,7 +38,16 @@ const { src, title } = Astro.props;
       <span data-icon-vol><Icon name="volume" /></span>
       <span data-icon-vol-mute hidden><Icon name="volume-mute" /></span>
     </button>
-    <input type="range" class="audio-player__volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Lautstärke" data-volume-slider />
+    <input
+      type="range"
+      class="audio-player__volume-slider"
+      min="0"
+      max="1"
+      step="0.01"
+      value="1"
+      aria-label="Lautstärke"
+      data-volume-slider
+    />
   </div>
 </div>
 
