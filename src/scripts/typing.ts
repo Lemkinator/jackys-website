@@ -103,9 +103,9 @@ export function initTyping(root: ParentNode = document): void {
       await deleteString(el, str, DELETE_SPEED);
       el.classList.remove('is-active-typing');
       await sleep(humanizePause(PAUSE_AFTER_DELETE));
-      loop((index + 1) % strings.length);
+      void loop((index + 1) % strings.length);
     }
 
-    loop(0);
+    void loop(0);
   });
 }
