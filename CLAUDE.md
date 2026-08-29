@@ -9,9 +9,6 @@ Pages via GitHub Actions (`.github/workflows/deploy.yml`, `withastro/action`). R
 2026, replacing a hand-written static HTML/jQuery site (see git history before the `astro-rebuild`
 branch).
 
-Standard Astro workflow: `npm install`, `npm run dev` (dev server), `npm run build` (outputs
-`dist/`), `npm run preview` (serve the build locally), `npx astro check` (type-check).
-
 ## Language
 
 **German only — no i18n.** There is no `src/i18n/`, no `/de/` route tree, no language toggle. All URL
@@ -86,15 +83,5 @@ Hand-written CSS with `@layer` + BEM (no Tailwind), scoped to what this site act
   classes, and motion/view-transition rules. No timeline/Vita styling, video-embed, or
   mobile-screenshot rules — there is no Vita page and no app/media MDX content here, so don't
   reintroduce them speculatively.
-- `src/components/Banner.astro` — full-bleed photo + gradient scrim + overlaid title. Don't hand-roll
-  a new banner treatment.
-- `src/components/Card.astro` — deliberately minimal: no `icon`, `date`, `interactionIcon`/counter,
-  or `previewVideo` props (none of that exists on this site). Takes an optional `href`; when absent,
-  it renders as a `<div>` instead of an `<a>` and exposes a `media` slot — used by the `/audio` track
-  cards to embed a native `<audio>` player without nesting interactive controls inside a link.
-- `src/components/Icon.astro` — trimmed to `instagram` / `email` / `chevron`, the only icons this
-  site uses. Add new ones here rather than pulling in an icon font/CDN.
-- `src/components/Logo.astro` — inline SVG (not an `<img>`), specifically so `currentColor` picks up
-  the surrounding text color and the mark flips with the theme for free. Keep its path data in sync
-  with `src/assets/logo/mark.svg` (the favicon-generation source) — same "J as the harp's
-  pillar and neck" mark, just `currentColor` vs. a fixed hex.
+
+Component-specific conventions live in `src/components/CLAUDE.md`.
