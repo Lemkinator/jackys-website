@@ -1,5 +1,5 @@
 /*! giscus has no built-in "transparent_light" theme (only transparent_dark
- * exists upstream) — this mirrors light.css from giscus/giscus with the
+ * exists upstream): this mirrors light.css from giscus/giscus with the
  * same canvas/btn transparency edits transparent_dark.css applies to
  * dark.css, so the widget sits directly on the page background instead of
  * a boxed white card. fg-default/fg-muted/fg-subtle are pinned to this

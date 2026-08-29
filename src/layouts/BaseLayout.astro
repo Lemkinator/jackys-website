@@ -26,7 +26,7 @@ const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
 <!doctype html>
 <html lang="de">
   <head>
-    <!-- Sets [data-theme] before first paint — no flash of the wrong theme.
+    <!-- Sets [data-theme] before first paint: no flash of the wrong theme.
          Runs on every page (no <ClientRouter />, see motion.css), so a
          stored choice or the OS setting applies immediately every time,
          not just on the first load of an SPA. -->
@@ -76,7 +76,7 @@ const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
   initKonami();
   // Must run before initReveal, which collects the [data-reveal] elements this creates.
   autoRevealSections('.content');
-  // Runs once globally — every [data-reveal] element on the page (not just
+  // Runs once globally. Every [data-reveal] element on the page (not just
   // card grids) gets picked up.
   initReveal();
   // .button-pill is safe to init here since it's always server-rendered by
@@ -90,7 +90,7 @@ const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
   );
   console.log(
     '%cGefällt dir die Seite? Quellcode: https://github.com/Lemkinator/jackys-website\n' +
-      'Psst — hier gibt es einen Konami-Code.',
+      'Psst, hier gibt es einen Konami-Code.',
     'color:#a49196;font-size:12px;',
   );
 </script>

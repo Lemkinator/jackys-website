@@ -1,4 +1,4 @@
-/* @property makes --border-angle animatable — without it, browsers can't
+/* @property makes --border-angle animatable. Without it, browsers can't
    interpolate <angle> values, so the border-glow rotation below would snap
    through steps instead of animating smoothly. */
 @property --border-angle {
@@ -27,7 +27,7 @@
 
 /* Astro's <Image>/<Picture> emit width/height as HTML "presentational
    hints", which set a literal pixel height even when a class only
-   constrains width — stretching the image instead of scaling it. Anything
+   constrains width, stretching the image instead of scaling it. Anything
    without both dimensions constrained by its own class needs this fallback. */
 @layer layout {
   img,
@@ -200,7 +200,7 @@
   }
 
   /* Touch taps leave :hover stuck with no mouseleave, freezing this ring
-     mid-sweep instead of spinning — reads as a half-missing border. */
+     mid-sweep instead of spinning, reading as a half-missing border. */
   @media (hover: hover) and (pointer: fine) {
     .button-pill::after {
       content: '';
@@ -258,14 +258,14 @@
   }
 
   /* perspective must live on .card's direct parent to affect its 3D tilt
-     transform — .card is a grandchild of .cards-wrapper. */
+     transform: .card is a grandchild of .cards-wrapper. */
   .card-perspective {
     perspective: 800px;
   }
 
   .card {
     /* A low-opacity background was tried here and made cards read as
-       visually empty — this restores real presence. */
+       visually empty; this restores real presence. */
     --bg-img: none;
     background-color: var(--color-surface);
     background-image: linear-gradient(to top, var(--scrim-strong), var(--scrim-soft) 60%), var(--bg-img);
@@ -312,7 +312,7 @@
   /* Subtle scroll-linked swing on the card's own photo, mirroring Banner's
      view()-timeline parallax at a much narrower range (see Card.astro's
      narrowFrom/narrowTo). @supports/reduced-motion fall back to the static
-     background-position set above — never a broken/blank state. */
+     background-position set above, never a broken/blank state. */
   @keyframes card-parallax {
     from {
       background-position: center var(--bg-pos-narrow-from);
@@ -384,7 +384,7 @@
 
   /* :not(.is-tracking) so devices where pointer.ts is active (pointer:fine,
      motion-ok) get lift/scale exclusively from the .is-tracking rule above
-     — keeps it debounced together with the rotate reset instead of
+     This keeps it debounced together with the rotate reset instead of
      snapping instantly on native :hover exit. Devices where pointer.ts
      never runs (coarse pointer, reduced motion) still get the plain
      instant pop here. */
@@ -426,7 +426,7 @@
   }
 
   /* A card carrying a <audio> player (or any other embedded control) isn't
-     a whole-card link — the composer line + player sit in this slot, and
+     a whole-card link: the composer line + player sit in this slot, and
      tilt/reveal still apply via the shared .card rules above. */
   .card__media {
     position: relative;
@@ -600,7 +600,7 @@
 
     /* !important: keyboard focus landing in the nav (e.g. Tab from the
        address bar) must not leave it scrolled off-screen, and the open
-       mobile menu must never slide away under the user — both need to
+       mobile menu must never slide away under the user; both need to
        beat nav-scroll.ts's inline transform. */
     .navbar:focus-within,
     .navbar:has(.navbar__toggle-input:checked) {
@@ -704,7 +704,7 @@
 
 /* Lives here (global), not in Gallery.astro's scoped <style>: the dots are
    created client-side via document.createElement, and Astro's style
-   scoping attribute is only added to server-rendered markup — a scoped
+   scoping attribute is only added to server-rendered markup, so a scoped
    rule wouldn't match these elements at all. */
 @layer layout {
   .gallery__dots {

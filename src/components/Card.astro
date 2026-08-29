@@ -3,7 +3,7 @@ import { getImage } from 'astro:assets';
 
 interface Props {
   // Omitted when the card carries its own interactive content via the
-  // `media` slot (e.g. an <audio> player) instead of linking anywhere —
+  // `media` slot (e.g. an <audio> player) instead of linking anywhere;
   // see the Tag branch below.
   href?: string;
   bgImg: ImageMetadata | string;
@@ -11,7 +11,7 @@ interface Props {
   description?: string;
   tags?: string[];
   // Shared-element name for the view-transition morph into the destination
-  // page's Banner — must be unique per document, and bgImg must be the
+  // page's Banner. Must be unique per document, and bgImg must be the
   // exact same file as that Banner's image.
   transitionName?: string;
   revealIndex?: number;
@@ -22,7 +22,7 @@ const { href, bgImg, title, description, tags = [], transitionName, revealIndex,
 
 const resolvedBg = typeof bgImg === 'string' ? bgImg : (await getImage({ src: bgImg, format: 'avif', width: 800 })).src;
 
-// Narrow scroll-parallax swing around the card's own vertical focal point —
+// Narrow scroll-parallax swing around the card's own vertical focal point,
 // same technique as Banner.astro's hasCustomFocal narrow swing, just a much
 // smaller +/-4pt range since a card is far shorter than a full banner.
 const focalY = Number(/(-?\d+(?:\.\d+)?)%\s*$/.exec(bgPosition ?? '')?.[1] ?? 50);
@@ -41,7 +41,7 @@ const style = [
   .join('; ');
 
 // A card without an href (a track card with an embedded player) renders as
-// a div, not a link — an <audio controls> inside an <a> is invalid nesting
+// a div, not a link: an <audio controls> inside an <a> is invalid nesting
 // of interactive controls.
 const Tag = href ? 'a' : 'div';
 ---

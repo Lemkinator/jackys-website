@@ -6,7 +6,7 @@ function formatTime(seconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-// Paints the played portion of a range input in --color-accent — accent-color
+// Paints the played portion of a range input in --color-accent. accent-color
 // alone only recolors the thumb (Chrome) or gives an unstyleable fill
 // (Firefox), so the two-tone track is built by hand here.
 function paintRange(input: HTMLInputElement): void {

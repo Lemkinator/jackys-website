@@ -1,8 +1,8 @@
 /* Light values live on bare :root so a stored 'light' choice (or no stored
    choice at all under a light system) always has something to fall back to.
-   Dark values are declared twice — once for "system prefers dark and the
+   Dark values are declared twice: once for "system prefers dark and the
    visitor hasn't overridden it", once for "the visitor explicitly chose
-   dark" — kept adjacent so they can't drift apart. See src/scripts/theme.ts
+   dark". Kept adjacent so they can't drift apart. See src/scripts/theme.ts
    for how [data-theme] gets set. */
 :root {
   color-scheme: light;
@@ -22,11 +22,11 @@
   --glass-highlight-fade: color-mix(in srgb, #fff 28%, transparent);
   --shadow-sm: 0 12px 30px -12px rgba(120, 60, 70, 0.28);
 
-  /* Sit on top of a photo, not the page — same in both themes. */
+  /* Sit on top of a photo, not the page; same in both themes. */
   --color-on-media: #f7f2f3;
   --scrim-strong: rgba(20, 8, 10, 0.85);
   --scrim-soft: rgba(20, 8, 10, 0.15);
-  /* Card's pointer-glow sits on its bgImg photo, not the page surface — every
+  /* Card's pointer-glow sits on its bgImg photo, not the page surface: every
      card photo is dark-toned regardless of site theme, so this can't inherit
      --glass-highlight (that one's tuned per-theme for the nav's glass panel,
      which does sit on the page). Reuses the value that already looked right
@@ -58,7 +58,7 @@
   --dur-tilt-active: 0.05s;
   /* Inherited default so motion.css's [data-reveal].reveal-armed can list
      "transform" in its transition unconditionally, on any element, without
-     an unset var() invalidating the whole transition-duration list —
+     an unset var() invalidating the whole transition-duration list.
      .card.is-tracking (site.css) overrides both on hover. */
   --tilt-duration: var(--dur-tilt);
   --tilt-ease: var(--ease-spring);

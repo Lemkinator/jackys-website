@@ -2,11 +2,11 @@
 // Source: uiverse.io/Galahhad/strong-squid-82 ("Toggle-switches/Galahhad_
 // strong-squid-82.html" in github.com/uiverse-io/galaxy). Adapted:
 // - --toggle-size scaled down (30px source -> 15px, it renders at
-//   168x75px / 84x37.5px respectively — font-size-scaled, so this alone
+//   168x75px / 84x37.5px respectively (font-size-scaled), so this alone
 //   keeps every internal em-based measurement crisp).
 // - Checkbox un-hidden from display:none to a visually-hidden clip so it
 //   stays keyboard-focusable, plus aria-label and a :focus-visible ring.
-// - Full pink reskin — sun/sky separated by value, not hue, so a pink sun
+// - Full pink reskin: sun/sky separated by value, not hue, so a pink sun
 //   still reads against a pink sky (see the CSS variables below).
 // - prefers-reduced-motion: reduce zeroes the slide/cloud/star transitions.
 ---
@@ -37,7 +37,7 @@
 </label>
 
 <script is:inline>
-  // Sets checked before first paint (like [data-theme] in BaseLayout.astro) —
+  // Sets checked before first paint (like [data-theme] in BaseLayout.astro);
   // otherwise theme.ts's post-paint sync replays the 0.5s transition on every nav.
   document.currentScript.previousElementSibling.querySelector('.theme-switch__checkbox').checked =
     document.documentElement.dataset.theme === 'dark';
@@ -55,7 +55,7 @@
     --container-width: 5.625em;
     --container-height: 2.5em;
     --container-radius: 6.25em;
-    /* Full pink reskin: sun and sky are separated by value, not hue — a
+    /* Full pink reskin: sun and sky are separated by value, not hue:
        pink sun on a pink sky would otherwise lose its focal point. */
     --container-light-bg: #d98da0;
     --container-night-bg: #2a1a20;
@@ -79,14 +79,14 @@
     }
   }
 
-  /* box-sizing/font-size only — NOT margin/padding here. Astro's CSS
+  /* box-sizing/font-size only. NOT margin/padding here. Astro's CSS
      scoping rewrites `*` into an attribute selector for scoping, which
      (unlike a real `*`) carries real specificity. That silently made this
      broad rule outrank later, more-specific single-class rules like
      .theme-switch__sun-moon-container's `margin: auto`, breaking its
      centering. Every element here is a div/label/svg (zero default
      margin/padding anyway) except the checkbox, which sets its own
-     margin/padding explicitly — so dropping the blanket reset costs nothing. */
+     margin/padding explicitly, so dropping the blanket reset costs nothing. */
   .theme-switch,
   .theme-switch *,
   .theme-switch *::before,
@@ -120,7 +120,7 @@
     border-radius: var(--container-radius);
   }
 
-  /* Visually hidden, not display:none — the source component's own choice
+  /* Visually hidden, not display:none. The source component's own choice
      removed the checkbox from the tab order entirely. */
   .theme-switch__checkbox {
     position: absolute;

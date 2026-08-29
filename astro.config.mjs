@@ -15,7 +15,7 @@ export default defineConfig({
     server: { headers: { 'Access-Control-Allow-Origin': '*' } },
     preview: { headers: { 'Access-Control-Allow-Origin': '*' } },
   },
-  // Redirect, not a plain rename — the old path is already live/indexed.
+  // Redirect, not a plain rename. The old path is already live/indexed.
   redirects: {
     '/impressum': '/imprint',
   },

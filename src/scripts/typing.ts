@@ -32,7 +32,7 @@ function humanizePause(base: number): number {
 }
 
 // `Number(raw) || fallback` would treat an explicit override of 0 as
-// missing — this only falls back when the attribute is absent or unparsable.
+// missing. This only falls back when the attribute is absent or unparsable.
 function numberOverride(raw: string | undefined, fallback: number): number {
   if (raw === undefined) return fallback;
   const n = Number(raw);
@@ -70,7 +70,7 @@ export function initTyping(root: ParentNode = document): void {
       return;
     }
     if (!Array.isArray(parsed) || parsed.length === 0) return;
-    // Guards against duplicate concurrent loops on the same element — e.g. a
+    // Guards against duplicate concurrent loops on the same element: e.g. a
     // Vite HMR reload re-running this without a full page reload, which
     // otherwise stacks multiple loop()s that fight over the same classList
     // and leave the cursor reading as permanently solid.

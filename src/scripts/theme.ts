@@ -47,7 +47,7 @@ export function initTheme(): void {
   checkbox?.addEventListener('change', () => setTheme(checkbox.checked ? 'dark' : 'light'));
 
   // giscus's client.js loads async (and lazily) and may not have created the
-  // iframe yet when the page first renders — apply the current theme once it
+  // iframe yet when the page first renders. Apply the current theme once it
   // shows up. The iframe itself then needs its own 'load' before giscus's
   // internal script is ready to receive postMessage, otherwise the message
   // is dropped and the embed stays on its static data-theme="light" until
@@ -59,7 +59,7 @@ export function initTheme(): void {
     observer.disconnect();
   }).observe(document.body, { childList: true, subtree: true });
 
-  // Only re-follow the OS setting while the visitor hasn't overridden it —
+  // Only re-follow the OS setting while the visitor hasn't overridden it;
   // once they have, localStorage (read by the inline head script) wins.
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     let stored: string | null = null;

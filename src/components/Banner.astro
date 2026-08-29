@@ -9,12 +9,12 @@ interface Props {
   // card->banner view-transition morph to work.
   transitionName?: string;
   shineTitle?: boolean;
-  // Screen-reader text for the CSS background-image (no native alt) — also
+  // Screen-reader text for the CSS background-image (no native alt); also
   // carries the required EU AI Act Art. 50(4) AI-content disclosure.
   imageAlt?: string;
   // CSS background-position, e.g. "center 25%". Also switches the
   // scroll-parallax below to a narrow swing centered on this point instead
-  // of the default wide one — see hasCustomFocal.
+  // of the default wide one, see hasCustomFocal.
   focalPosition?: string;
   // Per-banner overrides for the title/subtitle typing effect (ms). Falls
   // back to typing.ts's own defaults when omitted.
@@ -82,7 +82,7 @@ const ariaLabel = typingStrings.join('. ');
         aria-hidden="true"
         data-typing={JSON.stringify(typingStrings)}
         data-type-speed={typeSpeed}
-        data-pause-after-type={pauseAfterType}>{typingStrings.join(' — ')}</span
+        data-pause-after-type={pauseAfterType}>{typingStrings.join(' – ')}</span
       >
     </h1>
     <slot />
@@ -156,7 +156,7 @@ const ariaLabel = typingStrings.join('. ');
   }
 
   /* Uses --color-bg (already themed), not a fixed color, so the scrim
-     flips light/dark with the page instead of needing its own media query —
+     flips light/dark with the page instead of needing its own media query:
      the title text is --color-fg now, so it needs a same-theme scrim under
      it for contrast against whatever tone the photo happens to be. The top
      stop stays nonzero (not fully transparent): that's the strip the sticky
@@ -193,7 +193,7 @@ const ariaLabel = typingStrings.join('. ');
 
   /* Gradient tiles seamlessly at 200% (both edges are --color-fg), so the
      0 -> -200% background-position loop has no visible seam. Peak is a
-     color-mix blend toward --color-accent, not a hard white/accent jump —
+     color-mix blend toward --color-accent, not a hard white/accent jump:
      against --color-fg (near-black in light mode, near-white in dark) a
      literal #fff or full-accent stop reads as a harsh flash, not a glow. */
   .banner__content h1.banner__title--shine {
