@@ -1,9 +1,10 @@
 /* Light values live on bare :root so a stored 'light' choice (or no stored
    choice at all under a light system) always has something to fall back to.
-   Dark values are declared twice: once for "system prefers dark and the
-   visitor hasn't overridden it", once for "the visitor explicitly chose
-   dark". Kept adjacent so they can't drift apart. See src/scripts/theme.ts
-   for how [data-theme] gets set. */
+   Dark applies in two cases: "system prefers dark and the visitor hasn't
+   overridden it", or "the visitor explicitly chose dark". Both reference
+   the same --dark-* tokens (defined on :root below) instead of repeating
+   the values, so the two can't drift apart. See src/scripts/theme.ts for
+   how [data-theme] gets set. */
 :root {
   color-scheme: light;
 
@@ -87,44 +88,60 @@
   --nav-glass-blur-scrolled: 46px;
   --nav-glass-saturate: 260%;
   --nav-glass-saturate-scrolled: 300%;
+
+  /* Dark palette, defined once and referenced by both trigger blocks below
+     (system-preference and explicit data-theme='dark') so they can't drift
+     apart the way --color-bg just did (#221527 vs #171114). */
+  --dark-color-bg: #171114;
+  --dark-color-surface: #221a1d;
+  --dark-color-fg: #f5ecee;
+  --dark-color-muted: #a49196;
+  --dark-color-accent: #ff8fa8;
+  --dark-color-accent-2: #ffc4a3;
+  --dark-color-line: color-mix(in srgb, var(--dark-color-fg) 8%, transparent);
+  --dark-glass-highlight: color-mix(in srgb, #fff 26%, transparent);
+  --dark-glass-highlight-fade: color-mix(in srgb, #fff 11%, transparent);
+  --dark-shadow-sm: 0 12px 30px -12px rgba(20, 20, 30, 0.25);
+  --dark-nav-glass-opacity: 30%;
+  --dark-nav-glass-opacity-scrolled: 80%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --color-bg: #171114;
-    --color-surface: #221a1d;
-    --color-fg: #f5ecee;
-    --color-muted: #a49196;
-    --color-accent: #ff8fa8;
-    --color-accent-2: #ffc4a3;
-    --color-line: color-mix(in srgb, var(--color-fg) 8%, transparent);
-    --glass-highlight: color-mix(in srgb, #fff 26%, transparent);
-    --glass-highlight-fade: color-mix(in srgb, #fff 11%, transparent);
-    --shadow-sm: 0 12px 30px -12px rgba(20, 20, 30, 0.25);
+    --color-bg: var(--dark-color-bg);
+    --color-surface: var(--dark-color-surface);
+    --color-fg: var(--dark-color-fg);
+    --color-muted: var(--dark-color-muted);
+    --color-accent: var(--dark-color-accent);
+    --color-accent-2: var(--dark-color-accent-2);
+    --color-line: var(--dark-color-line);
+    --glass-highlight: var(--dark-glass-highlight);
+    --glass-highlight-fade: var(--dark-glass-highlight-fade);
+    --shadow-sm: var(--dark-shadow-sm);
 
-    --nav-glass-opacity: 30%;
-    --nav-glass-opacity-scrolled: 80%;
+    --nav-glass-opacity: var(--dark-nav-glass-opacity);
+    --nav-glass-opacity-scrolled: var(--dark-nav-glass-opacity-scrolled);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --color-bg: #171114;
-  --color-surface: #221a1d;
-  --color-fg: #f5ecee;
-  --color-muted: #a49196;
-  --color-accent: #ff8fa8;
-  --color-accent-2: #ffc4a3;
-  --color-line: color-mix(in srgb, var(--color-fg) 8%, transparent);
-  --glass-highlight: color-mix(in srgb, #fff 26%, transparent);
-  --glass-highlight-fade: color-mix(in srgb, #fff 11%, transparent);
-  --shadow-sm: 0 12px 30px -12px rgba(20, 20, 30, 0.25);
+  --color-bg: var(--dark-color-bg);
+  --color-surface: var(--dark-color-surface);
+  --color-fg: var(--dark-color-fg);
+  --color-muted: var(--dark-color-muted);
+  --color-accent: var(--dark-color-accent);
+  --color-accent-2: var(--dark-color-accent-2);
+  --color-line: var(--dark-color-line);
+  --glass-highlight: var(--dark-glass-highlight);
+  --glass-highlight-fade: var(--dark-glass-highlight-fade);
+  --shadow-sm: var(--dark-shadow-sm);
 
-  --nav-glass-opacity: 30%;
-  --nav-glass-opacity-scrolled: 80%;
+  --nav-glass-opacity: var(--dark-nav-glass-opacity);
+  --nav-glass-opacity-scrolled: var(--dark-nav-glass-opacity-scrolled);
 }
 
 /* Toggled by konami.ts's easter egg. Every scroll/view-transition rule
