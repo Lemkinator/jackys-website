@@ -40,7 +40,7 @@ const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
       }
     </script>
     <Seo title={title} description={description} image={image} type={type} noindex={noindex} />
-    <Font cssVariable="--font-kumbh" preload />
+    <Font cssVariable="--font-kumbh" preload={true} />
     <JsonLd
       data={{
         '@type': 'Person',
