@@ -32,7 +32,7 @@ const goatcounterCode = import.meta.env.PUBLIC_GOATCOUNTER_CODE;
          not just on the first load of an SPA. -->
     <script is:inline>
       try {
-        var stored = localStorage.getItem('theme');
+        const stored = localStorage.getItem('theme');
         document.documentElement.dataset.theme =
           stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       } catch (e) {
