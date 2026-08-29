@@ -23,8 +23,10 @@ function setTheme(theme: Theme): void {
 }
 
 function syncToggle(): void {
-  const checkbox = document.querySelector<HTMLInputElement>('.theme-switch__checkbox');
-  if (checkbox) checkbox.checked = currentTheme() === 'dark';
+  const isDark = currentTheme() === 'dark';
+  document.querySelectorAll<HTMLInputElement>('.theme-switch__checkbox').forEach((checkbox) => {
+    checkbox.checked = isDark;
+  });
 }
 
 // giscus has no built-in "transparent light" theme (only transparent_dark
@@ -43,12 +45,12 @@ function applyGiscusTheme(theme: Theme): void {
 export function initTheme(): void {
   syncToggle();
 
-  const checkbox = document.querySelector<HTMLInputElement>('.theme-switch__checkbox');
-  checkbox?.addEventListener('change', () => setTheme(checkbox.checked ? 'dark' : 'light'));
-
-  // The checkbox is visually hidden and not inside a <label>, so a click on
-  // the visible switch needs forwarding; checkbox.click() fires 'change' above.
-  document.querySelector('.theme-switch__container')?.addEventListener('click', () => checkbox?.click());
+  // Click-to-toggle forwarding lives in ThemeToggle.astro's is:inline script
+  // instead (runs before hydration, scoped per instance); it fires 'change'
+  // below via checkbox.click().
+  document.querySelectorAll<HTMLInputElement>('.theme-switch__checkbox').forEach((checkbox) => {
+    checkbox.addEventListener('change', () => setTheme(checkbox.checked ? 'dark' : 'light'));
+  });
 
   // giscus's client.js loads async (and lazily) and may not have created the
   // iframe yet when the page first renders. Apply the current theme once it
