@@ -65,7 +65,7 @@ export function initAudioPlayers(selector = '[data-audio-player]'): void {
 
     playBtn.addEventListener('click', () => {
       collapseVolume();
-      if (audio!.paused) audio!.play();
+      if (audio!.paused) audio!.play().catch(() => {});
       else audio!.pause();
     });
 
