@@ -46,6 +46,10 @@ export function initTheme(): void {
   const checkbox = document.querySelector<HTMLInputElement>('.theme-switch__checkbox');
   checkbox?.addEventListener('change', () => setTheme(checkbox.checked ? 'dark' : 'light'));
 
+  // The checkbox is visually hidden and not inside a <label>, so a click on
+  // the visible switch needs forwarding; checkbox.click() fires 'change' above.
+  document.querySelector('.theme-switch__container')?.addEventListener('click', () => checkbox?.click());
+
   // giscus's client.js loads async (and lazily) and may not have created the
   // iframe yet when the page first renders. Apply the current theme once it
   // shows up. The iframe itself then needs its own 'load' before giscus's

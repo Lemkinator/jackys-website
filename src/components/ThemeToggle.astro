@@ -6,12 +6,15 @@
 //   keeps every internal em-based measurement crisp).
 // - Checkbox un-hidden from display:none to a visually-hidden clip so it
 //   stays keyboard-focusable, plus aria-label and a :focus-visible ring.
+// - Root is a <div>, not <label>/<span>: both only permit phrasing content,
+//   and theme-switch__container's children are all divs. theme.ts wires up
+//   the click-to-toggle a <label> would otherwise give for free.
 // - Full pink reskin: sun/sky separated by value, not hue, so a pink sun
 //   still reads against a pink sky (see the CSS variables below).
 // - prefers-reduced-motion: reduce zeroes the slide/cloud/star transitions.
 ---
 
-<label class="theme-switch">
+<div class="theme-switch">
   <input type="checkbox" class="theme-switch__checkbox" aria-label="Zwischen hellem und dunklem Design wechseln" />
   <div class="theme-switch__container">
     <div class="theme-switch__clouds"></div>
@@ -34,7 +37,7 @@
       </div>
     </div>
   </div>
-</label>
+</div>
 
 <script is:inline>
   // Sets checked before first paint (like [data-theme] in BaseLayout.astro);
