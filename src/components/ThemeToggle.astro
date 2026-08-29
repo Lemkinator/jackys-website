@@ -103,8 +103,8 @@
     overflow: hidden;
     cursor: pointer;
     box-shadow:
-      0em -0.062em 0.062em rgba(0, 0, 0, 0.25),
-      0em 0.062em 0.125em rgba(255, 255, 255, 0.94);
+      0 -0.062em 0.062em rgba(0, 0, 0, 0.25),
+      0 0.062em 0.125em rgba(255, 255, 255, 0.94);
     transition: var(--transition);
     position: relative;
   }
@@ -115,8 +115,8 @@
     z-index: 1;
     inset: 0;
     box-shadow:
-      0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset,
-      0em 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
+      0 0.05em 0.187em rgba(0, 0, 0, 0.25) inset,
+      0 0.05em 0.187em rgba(0, 0, 0, 0.25) inset;
     border-radius: var(--container-radius);
   }
 
@@ -167,10 +167,10 @@
     border-radius: var(--container-radius);
     background-color: var(--sun-bg);
     box-shadow:
-      0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset,
-      0em -0.062em 0.062em 0em #c9788d inset;
+      0.062em 0.062em 0.062em 0 rgba(254, 255, 239, 0.61) inset,
+      0 -0.062em 0.062em 0 #c9788d inset;
     filter: drop-shadow(0.062em 0.125em 0.125em rgba(0, 0, 0, 0.25))
-      drop-shadow(0em 0.062em 0.125em rgba(0, 0, 0, 0.25));
+      drop-shadow(0 0.062em 0.125em rgba(0, 0, 0, 0.25));
     overflow: hidden;
     transition: var(--transition);
   }
@@ -182,8 +182,8 @@
     background-color: var(--moon-bg);
     border-radius: inherit;
     box-shadow:
-      0.062em 0.062em 0.062em 0em rgba(254, 255, 239, 0.61) inset,
-      0em -0.062em 0.062em 0em #b39aa4 inset;
+      0.062em 0.062em 0.062em 0 rgba(254, 255, 239, 0.61) inset,
+      0 -0.062em 0.062em 0 #b39aa4 inset;
     transition: var(--transition);
     position: relative;
   }
@@ -196,7 +196,7 @@
     height: 0.75em;
     border-radius: var(--container-radius);
     background-color: var(--spot-color);
-    box-shadow: 0em 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0 0.0312em 0.062em rgba(0, 0, 0, 0.25) inset;
   }
 
   .theme-switch__spot:nth-of-type(2) {
@@ -231,7 +231,7 @@
       2.937em 0.312em var(--clouds-color),
       2em -0.312em var(--back-clouds-color),
       3.625em -0.062em var(--clouds-color),
-      2.625em 0em var(--back-clouds-color),
+      2.625em 0 var(--back-clouds-color),
       4.5em -0.312em var(--clouds-color),
       3.375em -0.437em var(--back-clouds-color),
       4.625em -1.75em 0 0.437em var(--clouds-color),
