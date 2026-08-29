@@ -93,7 +93,7 @@
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --color-bg: #221527;
+    --color-bg: #171114;
     --color-surface: #221a1d;
     --color-fg: #f5ecee;
     --color-muted: #a49196;
