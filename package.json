@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.19.0",
+    "npm": "11.17.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -27,7 +31,7 @@
     "zod": "^4.5.2"
   },
   "allowScripts": {
-    "esbuild@0.28.1": true
+    "esbuild@0.28.2": true
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
