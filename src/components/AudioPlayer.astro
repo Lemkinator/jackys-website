@@ -16,8 +16,12 @@ const { src, title } = Astro.props;
   </audio>
 
   <button type="button" class="audio-player__play" aria-label="Abspielen" data-play-btn>
-    <span data-icon-play><Icon name="play" /></span>
-    <span data-icon-pause hidden><Icon name="pause" /></span>
+    <span data-icon-play>
+      <Icon name="play" />
+    </span>
+    <span data-icon-pause hidden>
+      <Icon name="pause" />
+    </span>
   </button>
 
   <input
@@ -31,12 +35,18 @@ const { src, title } = Astro.props;
     data-timeline
   />
 
-  <span class="audio-player__time" data-time>0:00 / 0:00</span>
+  <span class="audio-player__time" data-time>
+    0:00 / 0:00
+  </span>
 
   <div class="audio-player__volume" data-volume-group>
     <button type="button" class="audio-player__volume-btn" aria-label="Stummschalten" data-volume-btn>
-      <span data-icon-vol><Icon name="volume" /></span>
-      <span data-icon-vol-mute hidden><Icon name="volume-mute" /></span>
+      <span data-icon-vol>
+        <Icon name="volume" />
+      </span>
+      <span data-icon-vol-mute hidden>
+        <Icon name="volume-mute" />
+      </span>
     </button>
     <input
       type="range"

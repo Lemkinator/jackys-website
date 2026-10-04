@@ -29,7 +29,7 @@ export function autoRevealSections(containerSelector = '.content'): void {
   });
 }
 
-// IntersectionObserver-driven, not CSS animation-timeline: view(). That
+// IntersectionObserver-driven, not CSS animation-timeline: view(); that
 // shipped a real incident: animation-delay on a scroll-linked timeline is a
 // % of the timeline's range, not a wait time, which pushed a staggered
 // card's finish point past 100% and left it permanently invisible for some

@@ -28,16 +28,14 @@ const tracks = (await getCollection('tracks')).sort((a, b) => a.data.order - b.d
   </div>
 
   <CardGrid>
-    {
-      tracks.map((track, i) => (
-        <Card bgImg={track.data.coverImage} title={track.data.title} revealIndex={i}>
-          <Fragment slot="media">
-            <p class="card__composer">{track.data.composer}</p>
-            <AudioPlayer src={track.data.audio} title={`${track.data.title} – ${track.data.composer}`} />
-          </Fragment>
-        </Card>
-      ))
-    }
+    {tracks.map((track, i) => (
+      <Card bgImg={track.data.coverImage} title={track.data.title} revealIndex={i}>
+        <Fragment slot="media">
+          <p class="card__composer">{track.data.composer}</p>
+          <AudioPlayer src={track.data.audio} title={`${track.data.title} – ${track.data.composer}`} />
+        </Fragment>
+      </Card>
+    ))}
   </CardGrid>
 
   <Giscus />

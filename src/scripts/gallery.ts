@@ -1,5 +1,5 @@
 // No autoplay: WCAG 2.2.2 requires a pause control past 5s of auto-advance,
-// and auto-advancing content is a known accessibility anti-pattern: arrows
+// and auto-advancing content is a known accessibility anti-pattern; arrows
 // and dots only.
 import { initMagnetic } from '@/scripts/magnetic';
 
@@ -102,7 +102,7 @@ export function initGallery(): void {
     );
     slides.forEach((s) => activeObserver.observe(s));
 
-    // Only horizontal wheel/trackpad input drives the carousel: redirecting
+    // Only horizontal wheel/trackpad input drives the carousel; redirecting
     // vertical wheel too traps page scroll under any full-width gallery.
     track.addEventListener(
       'wheel',

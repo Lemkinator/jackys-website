@@ -1,6 +1,6 @@
 ---
 // Native <dialog> gives focus-trap, Esc-to-close, and a ::backdrop for
-// free. command-palette.ts only handles the keyboard shortcut, arrow-key
+// free; command-palette.ts only handles the keyboard shortcut, arrow-key
 // navigation, and substring filtering.
 interface Command {
   label: string;
@@ -37,18 +37,18 @@ const commands: Command[] = [
     spellcheck="false"
   />
   <ul class="command-palette__list" data-command-list>
-    {
-      commands.map((cmd) => (
-        <li>
-          <a href={cmd.href} class="command-palette__item" data-command-item>
-            <span class="command-palette__label">{cmd.label}</span>
-            {cmd.hint && <span class="command-palette__hint">{cmd.hint}</span>}
-          </a>
-        </li>
-      ))
-    }
+    {commands.map((cmd) => (
+      <li>
+        <a href={cmd.href} class="command-palette__item" data-command-item>
+          <span class="command-palette__label">{cmd.label}</span>
+          {cmd.hint && <span class="command-palette__hint">{cmd.hint}</span>}
+        </a>
+      </li>
+    ))}
   </ul>
-  <p class="command-palette__empty" data-command-empty hidden>Keine Treffer.</p>
+  <p class="command-palette__empty" data-command-empty hidden>
+    Keine Treffer.
+  </p>
 </dialog>
 
 <script>

@@ -1,4 +1,4 @@
-/* @property makes --border-angle animatable. Without it, browsers can't
+/* @property makes --border-angle animatable; without it, browsers can't
    interpolate <angle> values, so the border-glow rotation below would snap
    through steps instead of animating smoothly. */
 @property --border-angle {
