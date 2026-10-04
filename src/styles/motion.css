@@ -2,7 +2,7 @@
    effects are wrapped in @supports so unsupported browsers simply never
    apply them: every fallback path is a complete, visible page, never a broken one. */
 @layer motion {
-  /* Global safety net: individual effects also gate on
+  /* Global safety net; individual effects also gate on
      (prefers-reduced-motion: no-preference) so they never attach for these
      users, but this catches anything added later without its own guard. */
   @media (prefers-reduced-motion: reduce) {

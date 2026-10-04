@@ -14,7 +14,7 @@ interface Props {
   imageAlt?: string;
   // CSS background-position, e.g. "center 25%". Also switches the
   // scroll-parallax below to a narrow swing centered on this point instead
-  // of the default wide one, see hasCustomFocal.
+  // of the default wide swing: see hasCustomFocal.
   focalPosition?: string;
   // Per-banner overrides for the title/subtitle typing effect (ms). Falls
   // back to typing.ts's own defaults when omitted.
@@ -82,8 +82,10 @@ const ariaLabel = typingStrings.join('. ');
         aria-hidden="true"
         data-typing={JSON.stringify(typingStrings)}
         data-type-speed={typeSpeed}
-        data-pause-after-type={pauseAfterType}>{typingStrings.join(' – ')}</span
+        data-pause-after-type={pauseAfterType}
       >
+        {typingStrings.join(' – ')}
+      </span>
     </h1>
     <slot />
   </div>

@@ -1,4 +1,4 @@
-// Native <dialog> handles focus-trap, Esc-to-close, and ::backdrop: not
+// Native <dialog> handles focus-trap, Esc-to-close, and ::backdrop; not
 // reimplemented here.
 export function initCommandPalette(): void {
   const dialogEl = document.querySelector<HTMLDialogElement>('[data-command-palette]');
@@ -177,7 +177,7 @@ export function initCommandPalette(): void {
   });
 
   // e.target === dialog only matches clicks outside the content box
-  // (::backdrop); the box itself intercepts its own clicks.
+  // (::backdrop): the box itself intercepts its own clicks.
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
   });

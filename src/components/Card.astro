@@ -52,15 +52,13 @@ const Tag = href ? 'a' : 'div';
       <h2>{title}</h2>
       {description && <p>{description}</p>}
       <slot name="media" />
-      {
-        tags.length > 0 && (
-          <div class="card__tags">
-            {tags.map((tag) => (
-              <div class="card__tag">{tag}</div>
-            ))}
-          </div>
-        )
-      }
+      {tags.length > 0 && (
+        <div class="card__tags">
+          {tags.map((tag) => (
+            <div class="card__tag">{tag}</div>
+          ))}
+        </div>
+      )}
     </div>
   </Tag>
 </div>
